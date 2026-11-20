@@ -1,0 +1,280 @@
+{
+    "2026-11-16": {
+        "saved_at": "2026-11-20T17:00:37",
+        "source": "automatic_crawling",
+        "items": [
+            {
+                "weekday": "월",
+                "meal": "중식",
+                "menu_name": "미트볼하이라이스",
+                "category": "육류·고기류",
+                "weight": 1.0,
+                "recognition_source": "tesseract_pipeline"
+            },
+            {
+                "weekday": "월",
+                "meal": "중식",
+                "menu_name": "비엔나떡볶음",
+                "category": "육류·고기류",
+                "weight": 1.0,
+                "recognition_source": "tesseract_pipeline"
+            },
+            {
+                "weekday": "월",
+                "meal": "중식",
+                "menu_name": "볶음우동",
+                "category": "면류",
+                "weight": 0.6,
+                "recognition_source": "tesseract_pipeline"
+            },
+            {
+                "weekday": "월",
+                "meal": "중식",
+                "menu_name": "계란파국",
+                "category": "국·탕·찌개류",
+                "weight": 0.41,
+                "recognition_source": "tesseract_pipeline"
+            },
+            {
+                "weekday": "월",
+                "meal": "중식",
+                "menu_name": "순두부찌개",
+                "category": "국·탕·찌개류",
+                "weight": 0.41,
+                "recognition_source": "tesseract_pipeline"
+            },
+            {
+                "weekday": "월",
+                "meal": "석식",
+                "menu_name": "순두부찌개",
+                "category": "국·탕·찌개류",
+                "weight": 0.41,
+                "recognition_source": "tesseract_pipeline"
+            },
+            {
+                "weekday": "월",
+                "meal": "석식",
+                "menu_name": "참치에그포케",
+                "category": "밥류",
+                "weight": 0.43,
+                "recognition_source": "tesseract_pipeline"
+            },
+            {
+                "weekday": "화",
+                "meal": "중식",
+                "menu_name": "셀프불고기또띠아쌈",
+                "category": "육류·고기류",
+                "weight": 1.0,
+                "recognition_source": "tesseract_pipeline"
+            },
+            {
+                "weekday": "화",
+                "meal": "중식",
+                "menu_name": "갈릭필라프",
+                "category": "밥류",
+                "weight": 0.43,
+                "recognition_source": "tesseract_pipeline"
+            },
+            {
+                "weekday": "화",
+                "meal": "중식",
+                "menu_name": "가쓰오우동국",
+                "category": "면류",
+                "weight": 0.6,
+                "recognition_source": "tesseract_pipeline"
+            },
+            {
+                "weekday": "화",
+                "meal": "석식",
+                "menu_name": "군만두",
+                "category": "전·튀김류",
+                "weight": 0.12,
+                "recognition_source": "tesseract_pipeline"
+            },
+            {
+                "weekday": "화",
+                "meal": "석식",
+                "menu_name": "해파리냉채",
+                "category": "해산물류",
+                "weight": 0.12,
+                "recognition_source": "tesseract_pipeline"
+            },
+            {
+                "weekday": "수",
+                "meal": "중식",
+                "menu_name": "들기름막국수",
+                "category": "면류",
+                "weight": 0.6,
+                "recognition_source": "tesseract_pipeline"
+            },
+            {
+                "weekday": "수",
+                "meal": "중식",
+                "menu_name": "멸치볶음",
+                "category": "해산물류",
+                "weight": 0.12,
+                "recognition_source": "tesseract_pipeline"
+            },
+            {
+                "weekday": "수",
+                "meal": "중식",
+                "menu_name": "콩나물국",
+                "category": "국·탕·찌개류",
+                "weight": 0.41,
+                "recognition_source": "tesseract_pipeline"
+            },
+            {
+                "weekday": "수",
+                "meal": "중식",
+                "menu_name": "얼큰어묵탕",
+                "category": "국·탕·찌개류",
+                "weight": 0.41,
+                "recognition_source": "tesseract_pipeline"
+            },
+            {
+                "weekday": "수",
+                "meal": "석식",
+                "menu_name": "얼큰어묵탕",
+                "category": "국·탕·찌개류",
+                "weight": 0.41,
+                "recognition_source": "tesseract_pipeline"
+            },
+            {
+                "weekday": "수",
+                "meal": "석식",
+                "menu_name": "솔방울오징어데리야끼볶음",
+                "category": "해산물류",
+                "weight": 0.12,
+                "recognition_source": "tesseract_pipeline"
+            },
+            {
+                "weekday": "수",
+                "meal": "석식",
+                "menu_name": "치킨텐더포케",
+                "category": "육류·고기류",
+                "weight": 1.0,
+                "recognition_source": "tesseract_pipeline"
+            },
+            {
+                "weekday": "목",
+                "meal": "중식",
+                "menu_name": "청양크림함박",
+                "category": "육류·고기류",
+                "weight": 1.0,
+                "recognition_source": "tesseract_pipeline"
+            },
+            {
+                "weekday": "목",
+                "meal": "중식",
+                "menu_name": "유부우동국",
+                "category": "면류",
+                "weight": 0.6,
+                "recognition_source": "tesseract_pipeline"
+            },
+            {
+                "weekday": "목",
+                "meal": "중식",
+                "menu_name": "육개장",
+                "category": "국·탕·찌개류",
+                "weight": 0.41,
+                "recognition_source": "tesseract_pipeline"
+            },
+            {
+                "weekday": "목",
+                "meal": "석식",
+                "menu_name": "육개장",
+                "category": "국·탕·찌개류",
+                "weight": 0.41,
+                "recognition_source": "tesseract_pipeline"
+            },
+            {
+                "weekday": "목",
+                "meal": "석식",
+                "menu_name": "술불간장불고기",
+                "category": "육류·고기류",
+                "weight": 1.0,
+                "recognition_source": "tesseract_pipeline"
+            },
+            {
+                "weekday": "목",
+                "meal": "석식",
+                "menu_name": "고구마맛탕",
+                "category": "국·탕·찌개류",
+                "weight": 0.41,
+                "recognition_source": "tesseract_pipeline"
+            },
+            {
+                "weekday": "금",
+                "meal": "중식",
+                "menu_name": "잔치국수",
+                "category": "면류",
+                "weight": 0.6,
+                "recognition_source": "tesseract_pipeline"
+            },
+            {
+                "weekday": "금",
+                "meal": "중식",
+                "menu_name": "순대야채볶음",
+                "category": "육류·고기류",
+                "weight": 1.0,
+                "recognition_source": "tesseract_pipeline"
+            },
+            {
+                "weekday": "금",
+                "meal": "중식",
+                "menu_name": "매운양념꼬치어묵",
+                "category": "분식류",
+                "weight": 0.15,
+                "recognition_source": "tesseract_pipeline"
+            },
+            {
+                "weekday": "금",
+                "meal": "중식",
+                "menu_name": "ㅣ . ㆍ 참치마요볶음밥",
+                "category": "밥류",
+                "weight": 0.43,
+                "recognition_source": "tesseract_pipeline"
+            },
+            {
+                "weekday": "금",
+                "meal": "석식",
+                "menu_name": ". ㆍ 참치마요볶음밥",
+                "category": "밥류",
+                "weight": 0.43,
+                "recognition_source": "tesseract_pipeline"
+            },
+            {
+                "weekday": "금",
+                "meal": "석식",
+                "menu_name": "로제떡볶이",
+                "category": "분식류",
+                "weight": 0.15,
+                "recognition_source": "tesseract_pipeline"
+            },
+            {
+                "weekday": "금",
+                "meal": "석식",
+                "menu_name": "설탕핫도그",
+                "category": "국·탕·찌개류",
+                "weight": 0.41,
+                "recognition_source": "tesseract_pipeline"
+            },
+            {
+                "weekday": "금",
+                "meal": "석식",
+                "menu_name": "열무된장국",
+                "category": "국·탕·찌개류",
+                "weight": 0.41,
+                "recognition_source": "tesseract_pipeline"
+            },
+            {
+                "weekday": "금",
+                "meal": "석식",
+                "menu_name": "떡갈비버섯포케",
+                "category": "육류·고기류",
+                "weight": 1.0,
+                "recognition_source": "tesseract_pipeline"
+            }
+        ]
+    }
+}
