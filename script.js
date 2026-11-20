@@ -110,14 +110,46 @@ function renderPills(el, list, current, onClick) {
   });
 }
 
+function chipList(list) {
+  return list.map(x => `<span>${x}</span>`).join("");
+}
+
+// 식사 1회(중식 또는 석식)를 카드 1장으로: 헤더(시간+혼잡 요약) → 메인 2종 → 반찬/플러스바/음료
 function menuCards(d, m) {
   const x = DATA.menu[d][m];
-  const mains = x.main.map(it => `<div class="card"><div class="thumb">${it[1]}</div>
-    <div class="card-body"><div class="t">${it[0]}</div><div class="c">${DN[d]}요일 ${MN[m]} 메인</div><span class="tag">${MN[m]}</span></div></div>`).join("");
-  const sides = `<div class="card"><div class="thumb"><i class="bi bi-basket2"></i></div>
-    <div class="card-body"><div class="t">반찬 · 국</div><div class="c">${x.side.join(", ")}</div>
-    <div class="c">플러스바: ${x.bar.join(", ")}</div><div class="c">음료: ${x.drink}</div><span class="tag">${MN[m]}</span></div></div>`;
-  return mains + sides;
+  const p = predict(d, m);
+  let best = 0, peak = 0;
+  p.crowd.forEach((c, i) => {
+    if (c < p.crowd[best]) best = i;
+    if (c > p.crowd[peak]) peak = i;
+  });
+  const [peakLabel, peakColor] = level(p.crowd[peak]);
+  const [, bestColor] = level(p.crowd[best]);
+  const icon = m === "lunch" ? "bi-sun-fill ic-sun" : "bi-moon-stars-fill ic-moon";
+
+  const mains = x.main.map((it, i) => `
+    <div class="tile">
+      <span class="emo">${it[1]}</span>
+      <div><small>MAIN ${"AB"[i]}</small><b>${it[0]}</b></div>
+    </div>`).join("");
+
+  return `
+  <article class="mcard m-${m}">
+    <header class="mc-head">
+      <div class="mc-title">
+        <span class="mc-ico"><i class="bi ${icon}"></i></span>
+        <div><b>${MN[m]}</b><small>${DN[d]}요일 · ${DATA.hours[m]}</small></div>
+      </div>
+      <div class="mc-status">
+        <span class="st" style="--c:${peakColor}">피크 ${p.times[peak]} · ${peakLabel}</span>
+        <span class="st" style="--c:${bestColor}">추천 ${p.times[best]}</span>
+      </div>
+    </header>
+    <div class="mains">${mains}</div>
+    <div class="mc-sec"><span class="mc-label"><i class="bi bi-cup-hot"></i> 반찬 · 국</span><div class="chips2">${chipList(x.side)}</div></div>
+    <div class="mc-sec"><span class="mc-label"><i class="bi bi-plus-circle"></i> 플러스바</span><div class="chips2">${chipList(x.bar)}</div></div>
+    <div class="mc-sec"><span class="mc-label"><i class="bi bi-cup-straw"></i> 음료</span><div class="chips2">${chipList(x.drink.split("/"))}</div></div>
+  </article>`;
 }
 
 function renderMarquee() {
@@ -183,8 +215,7 @@ function render() {
 
   // 이번 주 학식
   renderPills($("dayPills"), [1, 2, 3, 4, 5].map(d => [d, DN[d] + (d === todayDay ? " (오늘)" : "")]), day, k => { day = k; render(); });
-  $("weekLunch").innerHTML = menuCards(day, "lunch");
-  $("weekDinner").innerHTML = menuCards(day, "dinner");
+  $("weekGrid").innerHTML = menuCards(day, "lunch") + menuCards(day, "dinner");
 
   // 혼잡도 (중식/석식 각각 표시)
   $("crowdSub").textContent = `${DN[day]}요일 · 좌석 ${DATA.seats}석 기준 예상 점유율`;
