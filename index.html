@@ -10,7 +10,6 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- 페이지 전체를 감싸는 은은한 체크(그리드) 캔버스 -->
   <div class="global-grid-bg" aria-hidden="true"></div>
 
   <main class="page-main">
@@ -43,23 +42,12 @@
       <p class="eyebrow">학생식당 수요 예측 서비스</p>
       <h1>눈치 안 보고,<br><em>덜 붐비는 시간</em>에 먹자</h1>
       <p class="lead">설문과 좌석 데이터로 시간대별 혼잡도와 메뉴별 식수를 미리 알려드려요</p>
-
-      <!-- 리디자인된 추천 브리핑 카드 (기존 .ask 대체) -->
       <div class="brief-card" id="briefCard"></div>
-
-      <p class="cond-label">조건을 선택하면 예측이 바뀌어요</p>
-      <div class="pills cond" id="cond"></div>
-    </section>
-
-    <!-- 이번 주 메뉴 흐르는 줄 -->
-    <section class="marquee-wrap" aria-label="이번 주 메뉴">
-      <div class="marquee" id="marquee"></div>
     </section>
 
     <!-- 오늘의 학식 -->
     <section id="today" class="wrap sec">
       <h2>고민 없이 쉽게,<br>오늘 뭐 나오는지 확인</h2>
-      <p class="sub">중식/석식을 선택해 보세요</p>
       <div class="pills" id="mealPills"></div>
       <div class="mgrid single" id="todayGrid"></div>
     </section>
@@ -69,7 +57,6 @@
       <div class="sec-head-row">
         <div>
           <h2>이번 주 학식</h2>
-          <p class="sub" id="weekSub">요일을 누르면 아래 혼잡도와 식수도 그 요일 기준으로 바뀌어요</p>
         </div>
         <button type="button" class="btn outline" id="openUploadBtn2">
           <i data-lucide="image-plus"></i> 식단표 사진으로 자동 업데이트
@@ -81,8 +68,15 @@
 
     <!-- 혼잡도 -->
     <section id="crowd" class="wrap sec">
-      <h2>시간대별 예상 혼잡도</h2>
-      <p class="sub" id="crowdSub"></p>
+      <div class="sec-head-row">
+        <div>
+          <h2>시간대별 예상 혼잡도</h2>
+          <p class="sub" id="crowdSub"></p>
+        </div>
+        <div class="cond-wrap">
+          <div class="pills cond" id="cond"></div>
+        </div>
+      </div>
       <h3 class="mh"><i data-lucide="sun" class="ic-sun"></i> 중식 <small id="tLunch"></small></h3>
       <div class="panel"><div class="chart" id="chartLunch"></div></div>
       <h3 class="mh"><i data-lucide="moon" class="ic-moon"></i> 석식 <small id="tDinner"></small></h3>
@@ -96,7 +90,7 @@
     </section>
   </main>
 
-  <!-- 시네마틱 커튼 리빌 푸터 (전체 체크 배경 위에서 자연스럽게 교차) -->
+  <!-- 시네마틱 커튼 리빌 푸터 -->
   <div class="c-footer-wrap">
     <footer class="c-footer">
       <div class="c-aurora"></div>
@@ -118,13 +112,8 @@
 
           <div class="c-btn-row sub">
             <a href="#week" class="glass-pill magnetic sm">이번 주 식단표</a>
-            <button type="button" class="glass-pill magnetic sm" id="toggleModelBtn">
-              <i data-lucide="info"></i> 예측 모델 산출 기준
-            </button>
           </div>
         </div>
-
-        <div class="c-model-box" id="model" hidden></div>
       </div>
 
       <div class="c-bottom">

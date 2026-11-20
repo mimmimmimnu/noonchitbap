@@ -10,7 +10,6 @@ const DATA = {
   hours: { lunch: "11:00~13:30", dinner: "17:00~18:30" },
   alpha: 0.3,
   exam: 1.10,
-  rain: 0.85,
   weekLabel: "이번 주 식단표",
 
   survey: {
@@ -84,7 +83,6 @@ if (day === 0 || day === 6) day = 1;
 const todayDay = day;
 let meal = now.getHours() >= 15 ? "dinner" : "lunch";
 let isExam = false;
-let isRain = false;
 
 function refreshIcons() {
   if (window.lucide && typeof window.lucide.createIcons === "function") {
@@ -105,7 +103,6 @@ function baseTotal(d, m) {
 function predict(d, m) {
   let total = baseTotal(d, m);
   if (isExam) total *= DATA.exam;
-  if (isRain) total *= DATA.rain;
   total = Math.round(total);
 
   const S = DATA.slots[m];
@@ -117,7 +114,8 @@ function predict(d, m) {
 function level(r) {
   if (r < 0.5) return ["여유", "var(--ok)"];
   if (r < 0.8) return ["보통", "var(--mid)"];
-  return ["혼잡", "var(--bad)"];
+  if (r < 1.0) return ["혼잡", "var(--bad)"];
+  return ["매우혼잡", "var(--very-bad)"];
 }
 
 // =====================================================
@@ -125,14 +123,26 @@ function level(r) {
 // =====================================================
 const $ = id => document.getElementById(id);
 
+function createInteractivePill(htmlLabel, isActive, onClick) {
+  const b = document.createElement("button");
+  b.type = "button";
+  b.className = "pill ih-btn" + (isActive ? " on" : "");
+  b.innerHTML = `
+    <span class="ih-dot" aria-hidden="true"></span>
+    <span class="ih-front">${htmlLabel}</span>
+    <span class="ih-hover" aria-hidden="true">
+      <span>${htmlLabel}</span>
+      <i data-lucide="arrow-right"></i>
+    </span>
+  `;
+  b.onclick = onClick;
+  return b;
+}
+
 function renderPills(el, list, current, onClick) {
   el.innerHTML = "";
   list.forEach(([key, label]) => {
-    const b = document.createElement("button");
-    b.className = "pill" + (key === current ? " on" : "");
-    b.textContent = label;
-    b.onclick = () => onClick(key);
-    el.appendChild(b);
+    el.appendChild(createInteractivePill(label, key === current, () => onClick(key)));
   });
 }
 
@@ -142,14 +152,6 @@ function chipList(list) {
 
 function menuCards(d, m) {
   const x = DATA.menu[d][m];
-  const p = predict(d, m);
-  let best = 0, peak = 0;
-  p.crowd.forEach((c, i) => {
-    if (c < p.crowd[best]) best = i;
-    if (c > p.crowd[peak]) peak = i;
-  });
-  const [peakLabel, peakColor] = level(p.crowd[peak]);
-  const [, bestColor] = level(p.crowd[best]);
   const iconName = m === "lunch" ? "sun" : "moon";
   const iconClass = m === "lunch" ? "ic-sun" : "ic-moon";
 
@@ -173,10 +175,6 @@ function menuCards(d, m) {
         <span class="mc-ico"><i data-lucide="${iconName}" class="${iconClass}"></i></span>
         <div><b>${MN[m]}</b><small>${DN[d]}요일 · ${DATA.hours[m]}</small></div>
       </div>
-      <div class="mc-status">
-        <span class="st" style="--c:${peakColor}">피크 ${p.times[peak]} · ${peakLabel}</span>
-        <span class="st" style="--c:${bestColor}">추천 ${p.times[best]}</span>
-      </div>
     </header>
     <div class="mains">${mains}</div>
     <div class="mc-sec"><span class="mc-label"><i data-lucide="soup"></i> 반찬 · 국</span><div class="chips2">${chipList(x.side)}</div></div>
@@ -185,45 +183,20 @@ function menuCards(d, m) {
   </article>`;
 }
 
-function renderMarquee() {
-  const cards = [];
-  for (let d = 1; d <= 5; d++) {
-    ["lunch", "dinner"].forEach(m => {
-      DATA.menu[d][m].main.forEach(it => {
-        const name = Array.isArray(it) ? it[0] : it;
-        const cat = Array.isArray(it) && it[1] ? it[1] : "추천";
-        cards.push(`
-          <div class="mq-pill">
-            <div class="mq-top">
-              <span class="cat-badge" data-cat="${cat}">${cat}</span>
-              <span class="c">${DN[d]} · ${MN[m]}</span>
-            </div>
-            <div class="t">${name}</div>
-          </div>`);
-      });
-    });
-  }
-  $("marquee").innerHTML = cards.join("") + cards.join("");
-}
-
 function render() {
   const p = predict(day, meal);
   const mLabel = MN[meal];
 
-  // 조건 버튼 (시험기간 / 날씨)
+  // 조건 버튼 (시험기간)
   $("cond").innerHTML = "";
-  [
-    ["exam", '<i data-lucide="book-open"></i> 시험기간', isExam],
-    ["rain", '<i data-lucide="cloud-rain"></i> 비·눈', isRain]
-  ].forEach(([k, label, on]) => {
-    const b = document.createElement("button");
-    b.className = "pill" + (on ? " on" : "");
-    b.innerHTML = label;
-    b.onclick = () => { if (k === "exam") isExam = !isExam; else isRain = !isRain; render(); };
-    $("cond").appendChild(b);
-  });
+  $("cond").appendChild(
+    createInteractivePill('<i data-lucide="book-open"></i> 시험기간', isExam, () => {
+      isExam = !isExam;
+      render();
+    })
+  );
 
-  // 히어로 추천 브리핑 카드 렌더링 (탈 AI화)
+  // 히어로 추천 브리핑 카드
   let best = 0, peak = 0;
   p.crowd.forEach((c, i) => {
     if (c < p.crowd[best]) best = i;
@@ -238,59 +211,37 @@ function render() {
   const live = t.getDay() >= 1 && t.getDay() <= 5 && day === todayDay;
   const open = toMin(p.times[0]), close = toMin(p.times[p.times.length - 1]) + 30;
 
-  let statusChipText = `${DN[day]}요일 ${mLabel} 기준`;
-  let isOperating = false;
-  let recLabel = "가장 한적한 추천 시간";
-  let recMainText = `${p.times[best]} 방문 추천`;
-  let [badgeText, badgeColor] = level(p.crowd[best]);
+  const formatStatus = (r) => {
+    const [text, color] = level(r);
+    return `<span style="color:${color}">${text}</span>`;
+  };
+
+  let recLabel = `${DN[day]}요일 ${mLabel} 가장 한적한 추천 시간`;
+  let recMainText = `현재 ${hhmm} · ${p.times[best]} 방문 추천 (${formatStatus(p.crowd[best])})`;
 
   if (live && nowMin >= open && nowMin < close) {
-    isOperating = true;
     let cur = 0;
     p.times.forEach((x, i) => { if (toMin(x) <= nowMin) cur = i; });
     let later = cur;
     for (let i = cur; i < p.crowd.length; i++) if (p.crowd[i] < p.crowd[later]) later = i;
 
-    statusChipText = `${hhmm} 현재 운영 중 · ${level(p.crowd[cur])[0]}`;
-    recLabel = later === cur ? "지금이 남은 시간 중 가장 한적해요" : "이후 가장 한적한 추천 시간";
-    recMainText = later === cur ? "지금 바로 방문 추천" : `${p.times[later]} 방문 추천`;
-    [badgeText, badgeColor] = level(p.crowd[later]);
+    recLabel = later === cur
+      ? `${DN[day]}요일 ${mLabel} · 지금이 남은 시간 중 가장 한적해요`
+      : `${DN[day]}요일 ${mLabel} · 이후 가장 한적한 추천 시간`;
+    recMainText = later === cur
+      ? `현재 ${hhmm} · 지금 방문 추천 (${formatStatus(p.crowd[cur])})`
+      : `현재 ${hhmm} · ${p.times[later]} 방문 추천 (${formatStatus(p.crowd[later])})`;
   } else if (live) {
-    statusChipText = nowMin < open ? `${hhmm} · ${mLabel} 운영 전` : `${hhmm} · ${mLabel} 운영 종료`;
+    const state = nowMin < open ? `${mLabel} 운영 전` : `${mLabel} 운영 종료`;
+    recLabel = `${DN[day]}요일 ${state} · 가장 한적한 추천 시간`;
+    recMainText = `현재 ${hhmm} · ${p.times[best]} 방문 추천 (${formatStatus(p.crowd[best])})`;
   }
 
-  const slotStrip = p.times.map((timeStr, i) => {
-    const [, cColor] = level(p.crowd[i]);
-    const isBest = i === best;
-    return `
-      <div class="bc-slot ${isBest ? "is-best" : ""}">
-        <span>${timeStr}</span>
-        <div class="bc-slot-bar"><i style="width:${pct(p.crowd[i])}%;background:${cColor}"></i></div>
-      </div>`;
-  }).join("");
-
   $("briefCard").innerHTML = `
-    <div class="bc-top">
-      <span class="bc-live">
-        <i class="live-dot ${isOperating ? "" : "idle"}"></i>
-        ${statusChipText}
-      </span>
-      <span class="bc-meta">${DN[day]}요일 ${mLabel} · 예상 <b>${p.total}식</b></span>
-    </div>
     <div class="bc-main">
-      <div>
-        <span class="bc-rec-label">${recLabel}</span>
-        <div class="bc-rec-time">
-          <strong>${recMainText}</strong>
-          <span class="bc-status-badge" style="--c:${badgeColor}">${badgeText}</span>
-        </div>
-      </div>
-      <div class="bc-peak-box">
-        <i data-lucide="flame"></i>
-        <span>최대 혼잡 피크 <b>${p.times[peak]}</b> (${pct(p.crowd[peak])}%)</span>
-      </div>
+      <span class="bc-rec-label">${recLabel}</span>
+      <strong class="bc-rec-headline">${recMainText}</strong>
     </div>
-    <div class="bc-strip">${slotStrip}</div>
   `;
 
   // 오늘의 학식
@@ -298,7 +249,7 @@ function render() {
   $("todayGrid").innerHTML = menuCards(todayDay, meal);
 
   // 이번 주 학식
-  $("weekSub").textContent = `${DATA.weekLabel} · 요일을 누르면 혼잡도와 식수도 그 요일 기준으로 바뀌어요`;
+  
   renderPills($("dayPills"), [1, 2, 3, 4, 5].map(d => [d, DN[d] + (d === todayDay ? " (오늘)" : "")]), day, k => { day = k; render(); });
   $("weekGrid").innerHTML = menuCards(day, "lunch") + menuCards(day, "dinner");
 
@@ -322,13 +273,7 @@ function render() {
     <div class="stat"><b>${Math.round(Math.min(p.crowd[peak], 1) * 100)}%</b><span>피크(${p.times[peak]}) 좌석 점유율</span></div>
     <div class="stat"><b>${DATA.seats}석</b><span>전체 좌석 수</span></div>`;
 
-  // 모델 설명
-  $("model").innerHTML = `<b style="color:var(--tx)">예측 방식 (단순 모델)</b><br>
-    ① 요일 기본 식수 = <code>평균(중식 ${DATA.avg.lunch} / 석식 ${DATA.avg.dinner}) × (1 + ${DATA.alpha} × (요일 선호점수 ÷ 평균 점수 − 1))</code><br>
-    ② 보정: 시험기간 × ${DATA.exam}, 비·눈 × ${DATA.rain} (가정값)<br>
-    ③ 시간대 점유율 = <code>(해당 30분 도착 + 직전 30분 도착 × ${DATA.stayRatio}) ÷ 좌석 ${DATA.seats}석</code><br>
-    ※ 요일 선호 점수는 설문 ${DATA.survey.n}명 응답 기준이라 표본이 작습니다. 가정값은 식당 인터뷰로 보정하세요.`;
-
+  
   refreshIcons();
 }
 
@@ -491,7 +436,6 @@ function render() {
     if (!parsedDraft || !parsedDraft.menu) return;
     DATA.menu = parsedDraft.menu;
     if (parsedDraft.weekLabel) DATA.weekLabel = parsedDraft.weekLabel;
-    renderMarquee();
     render();
     closeModal();
   });
@@ -500,7 +444,6 @@ function render() {
 // =====================================================
 // 5. 시작 & 스크롤 인터랙션
 // =====================================================
-renderMarquee();
 render();
 setInterval(render, 60000);
 
@@ -568,7 +511,6 @@ setInterval(render, 60000);
     const progress = Math.max(0, Math.min(1, raw));
     const eased = 1 - Math.pow(1 - progress, 2.2);
 
-    // 푸터가 올라올수록 메인 하단이 부드럽게 옅어져 체크 배경 위에서 자연스럽게 교차
     if (mainEl) {
       mainEl.style.opacity = (1 - eased * 0.85).toFixed(3);
     }
