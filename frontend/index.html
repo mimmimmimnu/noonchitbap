@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>눈치밥 | 학식 혼잡도 예측</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+  <script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="global-grid-bg" aria-hidden="true"></div>
+
+  <main class="page-main">
+    <header class="nav">
+      <div class="wrap nav-in">
+        <a class="logo" href="#">
+          <svg class="brand-mark" width="26" height="26" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+            <rect x="2" y="2" width="24" height="24" rx="8" fill="#2D5BFF"/>
+            <path d="M8.5 11.5V8.5M14 11.5V6.5M19.5 11.5V9.5" stroke="white" stroke-width="2.1" stroke-linecap="round"/>
+            <path d="M6.5 15H21.5C21.5 19.1421 18.1421 22 14 22C9.85786 22 6.5 19.1421 6.5 15Z" fill="white"/>
+          </svg>
+          <span>눈치밥</span>
+        </a>
+        <nav>
+          <a href="#today">오늘의 학식</a>
+          <a href="#week">이번 주</a>
+          <a href="#crowd">혼잡도</a>
+        </nav>
+        <div class="nav-actions">
+          <button type="button" class="btn ghost" id="openUploadBtn">
+            <i data-lucide="scan-line"></i> <span>식단표 등록</span>
+          </button>
+          <a class="btn dark" href="#crowd">혼잡도 보기 <i data-lucide="arrow-right"></i></a>
+        </div>
+      </div>
+    </header>
+
+    <!-- 히어로 -->
+    <section class="hero wrap">
+      <p class="eyebrow">학생식당 수요 예측 서비스</p>
+      <h1>눈치 안 보고,<br><em>덜 붐비는 시간</em>에 먹자</h1>
+      <p class="lead">오늘의 메뉴와 시간대 데이터로 학생식당 혼잡도를 미리 알려드려요</p>
+      <div class="brief-card" id="briefCard"></div>
+    </section>
+
+    <!-- 오늘의 학식 -->
+    <section id="today" class="wrap sec">
+      <h2>고민 없이 쉽게,<br>오늘 뭐 나오는지 확인</h2>
+      <div class="pills" id="mealPills"></div>
+      <div class="mgrid single" id="todayGrid"></div>
+    </section>
+
+    <!-- 이번 주 학식 -->
+    <section id="week" class="wrap sec">
+      <div class="sec-head-row">
+        <div>
+          <h2>이번 주 학식</h2>
+        </div>
+        <button type="button" class="btn outline" id="openUploadBtn2">
+          <i data-lucide="image-plus"></i> 식단표 사진으로 업데이트
+        </button>
+      </div>
+      <div class="pills" id="dayPills"></div>
+      <div class="mgrid" id="weekGrid"></div>
+    </section>
+
+    <!-- 혼잡도 -->
+    <section id="crowd" class="wrap sec">
+      <div class="sec-head-row">
+        <div>
+          <h2>시간대별 예상 혼잡도</h2>
+          <p class="sub" id="crowdSub"></p>
+        </div>
+        <div class="cond-wrap">
+          <div class="pills cond" id="cond"></div>
+        </div>
+      </div>
+      <h3 class="mh"><i data-lucide="sun" class="ic-sun"></i> 중식 <small id="tLunch"></small></h3>
+      <div class="panel"><div class="chart" id="chartLunch"></div></div>
+      <h3 class="mh"><i data-lucide="moon" class="ic-moon"></i> 석식 <small id="tDinner"></small></h3>
+      <div class="panel"><div class="chart" id="chartDinner"></div></div>
+      <p class="model-note">※ 현재 예측 모델은 가상 학습 데이터 40행으로 학습한 시제품이에요.</p>
+    </section>
+
+    <!-- 숫자 통계 -->
+    <section class="wrap sec">
+      <h2>눈치밥이 알려주는 오늘의 숫자</h2>
+      <div class="stats" id="stats"></div>
+    </section>
+  </main>
+
+  <!-- 시네마틱 커튼 리빌 푸터 -->
+  <div class="c-footer-wrap">
+    <footer class="c-footer">
+      <div class="c-aurora"></div>
+      <div class="c-giant-text" id="giantText">NUNCHIBAP</div>
+
+      <div class="c-center">
+        <p class="c-eyebrow">좌석 130석 · 메뉴 종류와 시간대 기반 혼잡도 예측</p>
+        <h2 class="c-title">줄 서는 시간은 줄이고,<br>더 안전하게 식사하세요</h2>
+
+        <div class="c-actions">
+          <div class="c-btn-row">
+            <a href="#crowd" class="glass-pill magnetic primary">
+              <i data-lucide="bar-chart-2"></i> 지금 가장 한적한 시간 보기
+            </a>
+            <a href="#today" class="glass-pill magnetic">
+              <i data-lucide="utensils"></i> 오늘의 학식 확인하기
+            </a>
+          </div>
+
+          <div class="c-btn-row sub">
+            <a href="#week" class="glass-pill magnetic sm">이번 주 식단표</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="c-bottom">
+        <button type="button" class="glass-pill magnetic top-btn" id="scrollTopBtn" aria-label="맨 위로">
+          <i data-lucide="arrow-up"></i>
+        </button>
+      </div>
+    </footer>
+  </div>
+
+  <!-- 식단표 등록 모달: OCR → 확인·수정 → 저장 -->
+  <div class="modal-backdrop" id="uploadModal" hidden>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-head">
+        <div>
+          <span class="modal-badge">MENU OCR</span>
+          <h3 id="modalTitle">주간 식단표 사진으로 메뉴 등록</h3>
+        </div>
+        <button type="button" class="icon-close" id="closeUploadBtn" aria-label="닫기">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+
+      <p class="modal-desc">
+        식단표 이미지(JPG, PNG, WEBP) 또는 PDF를 올리면 글자를 읽어 <b>요일별 중식·석식 메뉴</b> 후보를 만들어요.
+        잘못 읽힌 부분은 직접 고친 뒤 적용해 주세요.
+      </p>
+
+      <div class="api-row">
+        <label for="weekStartInput">적용할 주 <small>(날짜를 고르면 그 주 월요일로 자동 보정돼요)</small></label>
+        <input type="date" id="weekStartInput">
+      </div>
+
+      <label class="dropzone" id="dropzone" for="menuFileInput">
+        <input type="file" id="menuFileInput" accept="image/*,.pdf,application/pdf" hidden>
+        <div id="dropPlaceholder">
+          <div class="dz-ico"><i data-lucide="upload-cloud"></i></div>
+          <b id="dropTitle">여기를 클릭하거나 식단표 파일을 끌어다 놓으세요</b>
+          <span>학교 홈페이지 식단표 캡처·이미지·PDF (최대 15MB)</span>
+        </div>
+        <img id="previewImg" alt="업로드된 식단표 미리보기" hidden>
+      </label>
+
+      <div class="parse-status" id="parseStatus" hidden></div>
+
+      <div class="menu-editor-wrap" id="editorWrap" hidden>
+        <div class="me-head"><span>요일</span><span>식사</span><span>메뉴명</span><span>분류</span><span></span></div>
+        <div class="menu-editor" id="menuEditor"></div>
+      </div>
+
+      <div class="modal-foot">
+        <button type="button" class="btn outline" id="addRowBtn" hidden>
+          <i data-lucide="plus"></i> 메뉴 추가
+        </button>
+        <div class="modal-foot-right">
+          <button type="button" class="btn dark" id="runParseBtn" disabled>
+            <i data-lucide="cpu"></i> 메뉴 인식하기
+          </button>
+          <button type="button" class="btn primary-solid" id="applyMenuBtn" hidden>
+            <i data-lucide="check"></i> 웹사이트에 적용
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

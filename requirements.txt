@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+python-multipart
+pandas
+scikit-learn
+joblib
+pillow
+pytesseract
+pymupdf
+requests
+beautifulsoup4
